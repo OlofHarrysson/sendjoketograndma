@@ -10,8 +10,8 @@ class Joker():
   def __init__(self):
     self.url = 'https://appli.loveboxlove.fr/'
     self.message_signature = '\n\n/Olof'
-    self.box_name = 'Farmor'
-    # self.box_name = 'Sonjany'
+    # self.box_name = 'Farmor'
+    self.box_name = 'Sonjany'
 
     with open('cred.json') as infile:
       self.login_info = json.load(infile)
@@ -36,7 +36,7 @@ class Joker():
     # self.web = Browser(showWindow=True)
     self.web = Browser(showWindow=False)
     self.log_in()
-    self.switch_box()
+    # self.switch_box()
     message = self.send_message(joke)
     self.send_email(message)
 
@@ -56,6 +56,7 @@ class Joker():
     time.sleep(1)
     web.click(id='select-6-0') # Select lovebox dropdown
     time.sleep(1)
+
     web_ele = web.find_elements(tag='ion-label', text=self.box_name)[0]
     web_ele_id = web_ele.get_attribute('id')
     id_int = int(''.join(filter(str.isdigit, web_ele_id)))
@@ -71,7 +72,8 @@ class Joker():
     time.sleep(1)
     web.click(id='message')
 
-    message = joke + self.message_signature
+    # message = joke + self.message_signature
+    message = joke
     max_message_length = 168
     assert len(message) < max_message_length
     web.type(message)
@@ -127,11 +129,11 @@ def reset_sent_jokes_counter():
 
 # reset_sent_jokes_counter()
 
-# message_timer_low = mtl = 1 * 24 * 60 * 60 # One day
-# message_timer_high = mth = 2 * 24 * 60 * 60 # Two days
+message_timer_low = mtl = 1 * 24 * 60 * 60 # One day
+message_timer_high = mth = 2 * 24 * 60 * 60 # Two days
 
-message_timer_low = mtl = 3 * 60 # minutes
-message_timer_high = mth = 5 * 60 # minutes
+# message_timer_low = mtl = 13 * 60 # minutes
+# message_timer_high = mth = 45 * 60 # minutes
 joker = Joker()
 while True:
   time_until_next_message = random.randint(mtl, mth)
@@ -148,5 +150,5 @@ while True:
     email_msg = 'Some error occured while sending grandmas joke. '
     joker.send_email(email_msg + e_msg)
   # time.sleep(60) # Sleep for one minute
-  time.sleep(10) # Sleep
+  time.sleep(1000) # Sleep
 
