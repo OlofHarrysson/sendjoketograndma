@@ -33,8 +33,8 @@ class Joker():
       json.dump(sent_jokes, outfile)
 
   def send_joke(self, joke):
-    # self.web = Browser(showWindow=True)
-    self.web = Browser(showWindow=False)
+    self.web = Browser(showWindow=True)
+    # self.web = Browser(showWindow=False)
     self.log_in()
     # self.switch_box()
     message = self.send_message(joke)
@@ -64,7 +64,16 @@ class Joker():
 
     web.click(id=button_id) # Switch lovebox
 
+  def close_extra_windows(self):
+    # Close their two stupid extra windows that gets opened
+    web = self.web
+    time.sleep(1)
+    web.press(web.Key.ESCAPE)
+    time.sleep(1)
+    web.press(web.Key.ESCAPE)
+
   def send_message(self, joke):
+    self.close_extra_windows()
     web = self.web
     time.sleep(1)
     web.click('Send message')
@@ -72,19 +81,20 @@ class Joker():
     time.sleep(1)
     web.click(id='message')
 
-    # message = joke + self.message_signature
-    message = joke
+    message = joke + self.message_signature
     max_message_length = 168
     assert len(message) < max_message_length
+    time.sleep(1)
     web.type(message)
 
     # Find send-message button
     inner_send = web.find_elements(tag='ion-icon', classname='send-ico')[0]
     get_parent = lambda x: x.find_element_by_xpath('..')
 
+    time.sleep(1)
     parent = get_parent(inner_send)
     grand_parent = get_parent(parent)
-    grand_parent.click() # Send message
+    # grand_parent.click() # Send message
     print("Message Sent!")
     return message
 
