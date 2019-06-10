@@ -94,7 +94,7 @@ class Joker():
     time.sleep(1)
     parent = get_parent(inner_send)
     grand_parent = get_parent(parent)
-    # grand_parent.click() # Send message
+    grand_parent.click() # Send message
     print("Message Sent!")
     return message
 
@@ -139,26 +139,32 @@ def reset_sent_jokes_counter():
 
 # reset_sent_jokes_counter()
 
+def wait_to_next_message(time_until_next_message):
+  wakeup_every = 30 * 60 # Every half hour
+  while True:
+    now_time = time.time()
+    if now_time > time_until_next_message:
+      break
+    else:
+      time.sleep(wakeup_every)
+
 message_timer_low = mtl = 1 * 24 * 60 * 60 # One day
 message_timer_high = mth = 2 * 24 * 60 * 60 # Two days
 
-# message_timer_low = mtl = 13 * 60 # minutes
-# message_timer_high = mth = 45 * 60 # minutes
 joker = Joker()
 while True:
-  time_until_next_message = random.randint(mtl, mth)
+  wait_time = random.randint(mtl, mth)
+  time_until_next_message = wait_time + time.time()
   try:
     joke, sent_jokes = joker.get_joke()
     joker.send_joke(joke)
     joker.close_down()
     joker.add_to_seen_joke(sent_jokes, joke)
-    time.sleep(time_until_next_message)
+    wait_to_next_message(time_until_next_message)
   except Exception as e:
     joker.close_down()
     e_msg = str(e)
     print(e_msg)
     email_msg = 'Some error occured while sending grandmas joke. '
     joker.send_email(email_msg + e_msg)
-  # time.sleep(60) # Sleep for one minute
-  time.sleep(1000) # Sleep
-
+    time.sleep(60 * 15) # Sleep for 15 minutes to not spam emails
