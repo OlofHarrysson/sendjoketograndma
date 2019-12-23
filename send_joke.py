@@ -33,8 +33,8 @@ class Joker():
       json.dump(sent_jokes, outfile)
 
   def send_joke(self, joke):
-    self.web = Browser(showWindow=True)
-    # self.web = Browser(showWindow=False)
+    # self.web = Browser(showWindow=True)
+    self.web = Browser(showWindow=False)
     self.log_in()
     # self.switch_box()
     message = self.send_message(joke)
